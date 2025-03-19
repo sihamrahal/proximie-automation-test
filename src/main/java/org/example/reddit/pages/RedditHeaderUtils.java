@@ -1,8 +1,8 @@
 package org.example.reddit.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -10,11 +10,17 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-
 public class RedditHeaderUtils {
-    private static final Logger logger = LoggerFactory.getLogger(RedditHeaderUtils.class);
+    // The "initial login" button shown before you're logged in
+    private static final By INITIAL_LOGIN_BUTTON = By.cssSelector("a.login-required.login-link");
 
-    private final By LOGOUT_LINK_SELECTOR = By.xpath("//form[@class='logout hover']//a[normalize-space()='logout']");
+    // The logout link in the header
+    private static final By LOGOUT_LINK_SELECTOR = By.xpath("//form[@class='logout hover']//a[normalize-space()='logout']");
+
+    /**
+     * Returns a clickable header element by its visible text.
+     * Example usage: getHeaderElementByTitle(driver, "gaming")
+     */
     public static WebElement getHeaderElementByTitle(WebDriver driver, String text) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -26,17 +32,21 @@ public class RedditHeaderUtils {
         }
     }
 
+    /**
+     * Logs the user out by clicking the logout link in the header.
+     */
     public void logout(WebDriver driver) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             WebElement logoutLink = wait.until(ExpectedConditions.elementToBeClickable(LOGOUT_LINK_SELECTOR));
             logoutLink.click();
-            logger.info("Clicked logout link.");
         } catch (Exception e) {
-            logger.error("Error during logout: ", e);
             throw new RuntimeException("Logout failed: " + e.getMessage());
         }
     }
 
-
+    // Getter method for INITIAL_LOGIN_BUTTON
+    public static By getInitialLoginButton() {
+        return INITIAL_LOGIN_BUTTON;
+    }
 }

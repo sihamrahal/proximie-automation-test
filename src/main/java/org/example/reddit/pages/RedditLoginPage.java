@@ -16,27 +16,26 @@ public class RedditLoginPage {
     private final WebDriver driver;
     private static final Logger logger = LoggerFactory.getLogger(RedditLoginPage.class);
 
-    // Locator for the initial "Login" button
-    private final By initialLoginButton =  By.cssSelector("a.login-required.login-link");
+    // Locator for the final "Login" button within the login form
     private final By finalLoginButton = By.className("login");
 
-    // Locators for Shadow DOM and elements within
-    private final By shadowHostLocatorUsername = By.id("login-username");  // Replace with actual selector
-    private final By shadowHostLocatorPassword = By.id("login-password");   // Replace with actual selector
-    private final By shadowHostLocatorLogin = By.id("login");  // Replace with actual selector
-    private final By usernameFieldInShadow = By.name("username"); //Locators inside the shadow DOM. Double Check these.
-    private final By passwordFieldInShadow = By.name("password");
-    private final By loginButtonInShadow = By.cssSelector("button.login");
+    // Locators for the Shadow DOM hosts
+    private final By shadowHostLocatorUsername = By.id("login-username");  // Verify this is correct
+    private final By shadowHostLocatorPassword = By.id("login-password");  // Verify this is correct
 
+    // Fields inside the Shadow DOM
+    private final By usernameFieldInShadow = By.name("username");
+    private final By passwordFieldInShadow = By.name("password");
 
     public RedditLoginPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    //  method to find elements within a Shadow DOM
+    /**
+     * Utility method for finding elements within a Shadow DOM.
+     */
     private WebElement findElementInShadowDOM(By shadowHostLocator, By elementLocator) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
         WebElement shadowHost = wait.until(ExpectedConditions.presenceOfElementLocated(shadowHostLocator));
 
         SearchContext shadowRoot = (SearchContext) ((org.openqa.selenium.JavascriptExecutor) driver)
@@ -45,28 +44,28 @@ public class RedditLoginPage {
         return shadowRoot.findElement(elementLocator);
     }
 
+    /**
+     * Enters the provided username and password into the Shadow DOM fields,
+     * then clicks the final login button.
+     */
     public void login(String username, String password) {
         try {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-            // 1. Click the initial "Login" button
-            WebElement initialLoginButtonElement = wait.until(ExpectedConditions.elementToBeClickable(initialLoginButton));
-            initialLoginButtonElement.click();
-            logger.info("Clicked initial login button.");
+            // Click the initial login button using the getter from RedditHeaderUtils
+            WebElement initialLoginButton = wait.until(ExpectedConditions.elementToBeClickable(RedditHeaderUtils.getInitialLoginButton()));
+            initialLoginButton.click();
 
-            // Use the findElementInShadowDOM method to locate elements
-            WebElement usernameElement = findElementInShadowDOM(shadowHostLocatorUsername,usernameFieldInShadow);
+            // Locate and fill the shadow DOM fields
+            WebElement usernameElement = findElementInShadowDOM(shadowHostLocatorUsername, usernameFieldInShadow);
+            WebElement passwordElement = findElementInShadowDOM(shadowHostLocatorPassword, passwordFieldInShadow);
+
             usernameElement.sendKeys(username);
-            logger.info("Entered username: {}", username);
-
-            WebElement passwordElement = findElementInShadowDOM(shadowHostLocatorPassword,passwordFieldInShadow);
             passwordElement.sendKeys(password);
-            logger.info("Entered password.");
 
-            WebElement loginButtonElement = driver.findElement(finalLoginButton);
+            // Click the final login button
+            WebElement loginButtonElement = wait.until(ExpectedConditions.elementToBeClickable(finalLoginButton));
             loginButtonElement.click();
-            logger.info("Clicked login button.");
-
         } catch (Exception e) {
             logger.error("Error during login: ", e);
             throw new RuntimeException("Login failed: " + e.getMessage());

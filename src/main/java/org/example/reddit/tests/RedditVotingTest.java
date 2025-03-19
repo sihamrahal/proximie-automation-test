@@ -2,13 +2,17 @@ package org.example.reddit.tests;
 
 import org.example.reddit.config.Configuration;
 import org.example.reddit.pages.RedditHeaderUtils;
-import org.example.reddit.pages.RedditGamingSubredditPage;
+import org.example.reddit.pages.SubredditPage;
 import org.example.reddit.pages.RedditLoginPage;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 import org.testng.Assert;
+
+import java.time.Duration;
 
 public class RedditVotingTest extends BaseTest {
 
@@ -20,26 +24,36 @@ public class RedditVotingTest extends BaseTest {
             // 1. Login
             RedditLoginPage loginPage = new RedditLoginPage(driver);
             loginPage.login(Configuration.USERNAME, Configuration.PASSWORD);
-            logger.info("Login successful.");
             Assert.assertTrue(driver.getCurrentUrl().contains("reddit.com"), "Login failed: URL does not contain 'reddit.com'");
 
             // 2. Access the gaming section
             WebElement gamingSubreddit = RedditHeaderUtils.getHeaderElementByTitle(driver, Configuration.GAMING_SUBREDDIT); //replace Configuration.GAMING_SUBREDDIT with gaming?
             gamingSubreddit.click();
-            logger.info("Navigated to the gaming subreddit.");
+
+            // Explicit wait: wait up to 10 seconds for the URL to match
+            new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.urlToBe("https://old.reddit.com/r/gaming/"));
+
+            // Now retrieve the current URL
+            String expectedUrl = "https://old.reddit.com/r/gaming/";
+            String actualUrl = driver.getCurrentUrl();
+
+            // TestNG assertion
+            Assert.assertEquals(actualUrl, expectedUrl, "URL is not as expected!");
+
 
             // 3. Initialize the RedditGamingSubredditPage
-            RedditGamingSubredditPage gamingPage = new RedditGamingSubredditPage(driver);
+            SubredditPage gamingPage = new SubredditPage(driver);
 
             // 4. Perform the voting action on the second post
-            gamingPage.voteOnPostBasedOnKeyword(2, "test"); // Vote on the second post
-            logger.info("Voting action completed on the second post.");
-            Thread.sleep(3000);
+            gamingPage.voteOnPostBasedOnKeyword(2, "Nintendo"); // Vote on the second post
 
             // 5. Logout
-            RedditHeaderUtils redditHeaderUtils = new RedditHeaderUtils();
-            redditHeaderUtils.logout(driver);
-            logger.info("Logged out successfully.");
+            RedditHeaderUtils headerUtils = new RedditHeaderUtils();
+            headerUtils.logout(driver);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            WebElement initialLoginButton = wait.until(ExpectedConditions.visibilityOfElementLocated(RedditHeaderUtils.getInitialLoginButton()));
+            Assert.assertTrue(initialLoginButton.isDisplayed(), "Login button should be visible again after logout.");
 
 
         } catch (Exception e) {
