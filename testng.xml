@@ -1,0 +1,8 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Reddit Voting Tests">
+    <test name="Reddit Voting Test">
+        <classes>
+            <class name="org.example.reddit.tests.RedditVotingTest"/>
+        </classes>
+    </test>
+</suite>
