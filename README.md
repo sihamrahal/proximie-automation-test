@@ -1,161 +1,75 @@
-# Reddit Automation Project
+# Reddit Automation Testing
 
-This project automates interactions with the Reddit website using **Selenium WebDriver** and **TestNG**. It includes functionalities such as logging in, navigating to a subreddit, and voting on posts based on specific conditions.
+This project automates actions on Reddit using Selenium WebDriver with TestNG. It performs tasks like logging in, voting on posts based on keywords, and logging out. The framework is designed to be extensible for additional functionalities.
 
----
+## Prerequisites
 
-## **Features**
-- **Login**: Automates the login process using provided credentials.
-- **Subreddit Navigation**: Navigates to a specified subreddit (e.g., `gaming`).
-- **Voting**: Votes on posts based on the presence of a keyword in the post title.
-- **Logout**: Logs out of the Reddit account after completing the actions.
+- **Java 11 or higher**: Ensure you have Java installed.
+- **Maven**: For managing dependencies and building the project.
+- **Selenium WebDriver**: For interacting with the browser.
+- **TestNG**: For test execution and reporting.
+- **WebDriverManager**: For automatically managing browser drivers.
+- **ExtentReports**: For test reporting.
 
----
+## Setup
 
-## **Technologies Used**
-- **Java**: Programming language for writing the automation scripts.
-- **Selenium WebDriver**: Browser automation framework.
-- **TestNG**: Testing framework for organizing and running tests.
-- **SLF4J**: Logging framework for capturing logs.
-- **WebDriverManager**: Manages browser drivers automatically.
+1. Clone the repository.
+2. Ensure you have **Java** and **Maven** installed.
+3. Run the following command to install dependencies:
+    ```bash
+    mvn install
+    ```
 
----
+## Configuration
 
-## **Prerequisites**
-1. **Java Development Kit (JDK)**: Ensure JDK 8 or higher is installed.
-2. **Maven**: Ensure Maven is installed for dependency management.
-3. **Browser**: Chrome or Firefox (for cross-browser testing).
+You can configure the following properties in `src/main/resources/config.properties`:
 
----
+- `reddit.url`: The Reddit URL (default: `https://old.reddit.com`).
+- `reddit.username`: The Reddit username for login.
+- `reddit.password`: The Reddit password for login.
 
-## **Setup Instructions**
 
-### **1. Clone the Repository**
-```bash
-git clone https://github.com/your-username/reddit-automation.git
-cd reddit-automation
-2. Update Configuration
-Edit the config.properties file in the src/main/resources directory to provide your Reddit credentials and other configurations:
-
-properties
-Copy
+Example:
+```properties
 reddit.url=https://old.reddit.com
-reddit.username=your-username
-reddit.password=your-password
-reddit.gamingsubreddit=gaming
-3. Install Dependencies
-Run the following command to install all dependencies:
+reddit.username=Siham-Proximie
+reddit.password=testuser1
+```
 
-bash
-Copy
-mvn clean install
-Running the Tests
-1. Run All Tests
-To run all tests, use the following command:
+## Running the Tests
 
-bash
-Copy
-mvn test
-2. Run Specific Tests
-To run specific tests, update the testng.xml file and use the following command:
+1. The tests are implemented using **TestNG**. To run the tests, you can execute the following command:
 
-bash
-Copy
-mvn test -DsuiteXmlFile=testng.xml
-3. Cross-Browser Testing
-To run tests on different browsers, update the browser parameter in the testng.xml file:
+    ```bash
+    mvn test
+    ```
 
-xml
-Copy
-<parameter name="browser" value="chrome"/> <!-- or "firefox" -->
-Run HTML
-Project Structure
-Copy
-src
-├── main
-│   ├── java
-│   │   └── org
-│   │       └── example
-│   │           └── reddit
-│   │               ├── config
-│   │               │   └── Configuration.java
-│   │               ├── pages
-│   │               │   ├── RedditLoginPage.java
-│   │               │   ├── RedditHeaderUtils.java
-│   │               │   └── SubredditPage.java
-│   │               └── tests
-│   │                   └── RedditVotingTest.java
-│   └── resources
-│       └── config.properties
-└── test
-    └── java
-        └── (test files, if any)
-Test Reports
-TestNG generates an HTML report in the test-output directory after test execution. Open index.html in your browser to view the report.
+2. Test execution will be logged, and the results will be generated in the `test-output/ExtentReport.html` file.
 
-Logs
-Logs are captured using SLF4J and can be found in the console output or log files (if configured).
+## Test Flow
 
-Key Functionality
-1. Login
-The RedditLoginPage class handles the login process, including interacting with Shadow DOM elements for username and password input.
+- Login: Logs into Reddit using the provided credentials.
 
-2. Subreddit Navigation
-The RedditHeaderUtils class provides utility methods for navigating to subreddits and logging out.
+- Navigate to Subreddit: Navigates to the gaming subreddit.
 
-3. Voting on Posts
-The SubredditPage class handles voting on posts based on the presence of a keyword in the post title.
+- Vote on Post: Votes on the second post if the title contains the keyword "Nintendo".
 
-4. Logout
-The RedditHeaderUtils class includes a method to log out and verify the logout was successful.
+- Logout: Logs out of the Reddit account.
 
-Example Test Flow
-Login: Logs into Reddit using the provided credentials.
+## Test Reporting
 
-Navigate to Subreddit: Navigates to the gaming subreddit.
+- **ExtentReports** is used for generating detailed test reports. After each test execution, a report will be available in the `test-output/ExtentReport.html` file.
+- Screenshots are taken for failed tests and included in the report.
 
-Vote on Post: Votes on the second post if the title contains the keyword "Nintendo".
+## Screenshots
 
-Logout: Logs out of the Reddit account.
+Screenshots will be saved in the `test-output/screenshots/` folder.
 
-Contributing
-Contributions are welcome! If you find any issues or have suggestions for improvement, please open an issue or submit a pull request.
+---
+**Contact:**
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-Contact
 For questions or feedback, please contact:
 
-Your Name: your-email@example.com
+Siham Rahal: siham.rahal@outlook.com
 
-GitHub: your-username
-
-Copy
-
----
-
-### **Key Sections**
-1. **Features**: Highlights the main functionalities of the project.
-2. **Technologies Used**: Lists the tools and frameworks used.
-3. **Setup Instructions**: Provides step-by-step instructions for setting up the project.
-4. **Running the Tests**: Explains how to execute the tests.
-5. **Project Structure**: Describes the directory structure of the project.
-6. **Test Reports**: Explains how to view the test reports.
-7. **Logs**: Explains how to view logs.
-8. **Key Functionality**: Describes the core functionality of the project.
-9. **Example Test Flow**: Provides an example of the test flow.
-10. **Contributing**: Encourages contributions and provides guidelines.
-11. **License**: Specifies the license for the project.
-12. **Contact**: Provides contact information for questions or feedback.
-
----
-
-### **How to Use**
-1. Replace `your-username`, `your-password`, and `your-email@example.com` with your actual details.
-2. Update the repository URL in the **Clone the Repository** section if needed.
-3. Add a `LICENSE` file if you want to include a license.
-
----
-
-This `README.md` file provides a comprehensive overview of your project and makes it easy for others to understand, set up, and contribute to your work. Let me know if you need further assistance! 😊
+GitHub: sihamrahal
