@@ -65,6 +65,8 @@ public class SubredditPage {
 
     /**
      * Handles the upvote action on a post.
+     * If the post is already upvoted, it skips the action.
+     * If the post is downvoted or not voted, it votes up.
      *
      * @param post The post element to upvote.
      */
@@ -80,9 +82,6 @@ public class SubredditPage {
         else {         post.findElement(UPVOTE_BUTTON).click();
 }
 
-        // Wait for the voting state to update
-        wait.until(ExpectedConditions.attributeContains(votingDiv, "class", "likes"));
-
         // Verify the post is now upvoted
         String finalClass = votingDiv.getAttribute("class");
         Assert.assertTrue(finalClass.contains("likes"), "Upvote failed: Post was not upvoted successfully.");
@@ -90,6 +89,8 @@ public class SubredditPage {
 
     /**
      * Handles the downvote action on a post.
+     * If the post is already downvoted, it skips the action.
+     * If the post is upvoted or not voted, it votes down.
      *
      * @param post The post element to downvote.
      */
@@ -106,9 +107,6 @@ public class SubredditPage {
             post.findElement(DOWNVOTE_BUTTON).click();
 
         }
-
-        // Wait for the voting state to update
-        wait.until(ExpectedConditions.attributeContains(votingDiv, "class", "dislikes"));
 
         // Verify the post is now downvoted
         String finalClass = votingDiv.getAttribute("class");
